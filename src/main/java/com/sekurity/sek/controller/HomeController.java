@@ -2,6 +2,7 @@ package com.sekurity.sek.controller;
 
 import com.sekurity.sek.model.JwtRequest;
 import com.sekurity.sek.model.JwtResponse;
+import com.sekurity.sek.redis.RedisValueService;
 import com.sekurity.sek.service.UserService;
 import com.sekurity.sek.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,20 @@ public class HomeController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisValueService redisValueService;
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(){
         return "Wilcomen";
     }
 
+    @GetMapping("/appartament")
+    public String appartament(){
+        return "Hello";
+    }
+
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/authenticate")
     public JwtResponse authenticate(@RequestBody JwtRequest jwtRequest) throws Exception{
         try {
@@ -43,8 +52,6 @@ public class HomeController {
                 = userService.loadUserByUsername(jwtRequest.getUsername());
         final String token
                 = jwtUtil.generateToken(userDetails);
-
-        System.out.println(token);
 
         return new JwtResponse(token);
     }
